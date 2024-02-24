@@ -21,6 +21,9 @@ import requests
 import ttkbootstrap as tb
 from tkinter import messagebox
 import subprocess
+from create_excel import create_excel_file
+from create_html_table import modify_html_table
+from emailBody import generate_email_body, image1_base64, image2_base64
 from dotenv import load_dotenv
 load_dotenv()
 
