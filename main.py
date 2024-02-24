@@ -2,7 +2,7 @@ from libraries import *
 
 class BTX:
     
-    def login(driver):
+    def login(self,driver):
         # Make selenium to automate the login process (username,password,login button)
         username_input = driver.find_element(By.ID, 'ctl00_cntPlcHldrContent_txtUsrID')
         password_input = driver.find_element(By.ID, 'ctl00_cntPlcHldrContent_txtUsrPwd')
@@ -13,7 +13,7 @@ class BTX:
         submit_button.click()
 
     # Define a function for navigating to a specific page
-    def navigate_to_page(driver, url, xpath):
+    def navigate_to_page(self,driver, url, xpath):
         driver.get(url)
         time.sleep(2)
         driver.maximize_window()
@@ -22,6 +22,22 @@ class BTX:
         element.click()
         time.sleep(2)
 
+    # Define a function for selecting options from dropdown and performing actions
+    def select_dropdown_option(self,driver, id, value):
+        select = Select(driver.find_element(By.ID, id))
+        select.select_by_value(value)
+        time.sleep(2)
+
+    # Define a function for entering date and performing search
+    def enter_date_and_search(self,driver, id, date):
+        datepicker_input = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, id)))
+        datepicker_input.clear()
+        datepicker_input.send_keys(date.strftime('%d/%m/%Y'))
+        time.sleep(2)
+        search_button = driver.find_element(By.ID, "ctl00_cntPlcHldrContent_btnTpltUpdate_btnSearch")
+        search_button.click()
+        time.sleep(2)
+    
     def update_message(self, message):
         # Update the message label text
         self.outputMsg.config(text=message)
@@ -66,7 +82,6 @@ class BTX:
         self.program_thread = Thread(target=self.run_program)
         self.program_thread.start()
 
-
     def stop_program(self):
 
         # Set the running flag to False to stop the loop
@@ -77,7 +92,6 @@ class BTX:
         # Additional cleanup tasks if needed
         self.startBtn["state"] = tk.NORMAL
 
-    
     def run_program(self):
 
         # Enable the Stop button
@@ -104,60 +118,43 @@ class BTX:
             current_time = datetime.datetime.now().time()
             try:
                 # Login to BTX website page
-                login(driver)
+                self.login(driver)
 
                 # Step 2: Navigate to page
-                navigate_to_page(driver, 'https://btx.kenanga.com.my/btxadmin/default.aspx', "//img[@src='/btxadmin/images/demo/icons/i_dayEndM_off.jpg']")
-                
-                # Check if it's 4:30 AM
-                if current_time.hour == 10 and current_time.minute == 30:
-                    # Check if email has already been sent
-                    if not email_sent_430am:
-                        subprocess.run(["python", "one.py"])
-                        messagebox.showinfo("Processing Ended", "Processing for 10:30 AM has ended.")
-                        # Set email_sent flag to True to prevent sending multiple emails
-                        email_sent_430am = True
-                else:
-                    # Reset email_sent_430am if the time is not 4:30 AM
-                    email_sent_430am = False
-                
-                # Check if it's 5:45 AM
-                if current_time.hour == 11 and current_time.minute == 10:
-                    # Check if email for 5:45 AM has already been sent
-                    if not email_sent_545am:
-                        subprocess.run(["python", "two.py"])
-                        messagebox.showinfo("Processing Ended", "Processing for 11:10 AM has ended.")
-                        email_sent_545am = True
-                else:
-                    # Reset email_sent_545am if the time is not 5:45 AM
-                    email_sent_545am = False
+                self.navigate_to_page(driver, 'https://btx.kenanga.com.my/btxadmin/default.aspx', "//img[@src='/btxadmin/images/demo/icons/i_dayEndM_off.jpg']")
 
-                # Check if it's 6:30 AM
-                if current_time.hour == 12 and current_time.minute == 10:
-                    # Check if email for 6:30 AM has already been sent
-                    if not email_sent_630am:
-                        subprocess.run(["python", "three.py"])
-                        messagebox.showinfo("Processing Ended", "Processing for 12:10 PM has ended.")
-                        email_sent_630am = True
-                else:
-                    # Reset email_sent_545am if the time is not 5:45 AM
-                    email_sent_630am = False
+                # Step 3: Perform actions on page
+                second_url = driver.current_url
+                print("Second URL:", second_url)
 
-                # Check if it's 7:00 AM
-                if current_time.hour == 13 and current_time.minute == 1:
-                    # Check if email for 7:00 AM has already been sent
-                    if not email_sent_700am:
-                        subprocess.run(["python", "four.py"])
-                        messagebox.showinfo("Processing Ended", "Processing for 1:01 PM has ended.")
-                        email_sent_700am = True
-                else:
-                    # Reset email_sent_700am if the time is not 7:00 AM
-                    email_sent_700am = False
+                for xpath in ["//img[@src='/btxadmin/images/demo/icons/i_dayEndE_on.jpg']", "//img[@src='/btxadmin/images/demo/icons/i_dayEndE_off.jpg']"]:
+                    try:
+                        dayEndEnquiry_image = driver.find_element(By.XPATH, xpath)
+                        dayEndEnquiry_image.click()
+                        break
+                    except NoSuchElementException:
+                        continue
 
-                print('waiting...')
-                self.update_message('Waiting...')
-                # If neither of the conditions are met, wait for 5 seconds
-                time.sleep(5)
+                third_url = driver.current_url
+                print("Third URL:", third_url)
+
+                self.select_dropdown_option(driver, "ctl00_cntPlcHldrContent_selEODEnquiry", "1,S")
+
+                # Choose date 
+                yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+                self.enter_date_and_search(driver, "ctl00_cntPlcHldrContent_txtDate", yesterday)
+
+                # Step 4: Switch to new window and perform actions
+                new_window = driver.window_handles[1]
+                driver.switch_to.window(new_window)
+                driver.maximize_window()
+                fifth_url = driver.current_url
+                print("Fifth URL:", fifth_url)
+                process_dates = driver.find_elements(By.XPATH, "//table[@class='clsTable']/tbody/tr[2]/td[@id='tdBG']/span")
+                for process in process_dates:
+                    print(process.text)
+                driver.get(fifth_url)
+                html_content_fifth_url = driver.page_source
             finally:
                 driver.quit()
             
