@@ -1,6 +1,5 @@
 from libraries import *
 
-
 class one(tk.Frame):
 
     def process_html_content(html_content):
