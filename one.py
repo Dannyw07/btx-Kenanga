@@ -1,116 +1,11 @@
 from libraries import *
-
-# https://stackoverflow.com/questions/31836104/pyinstaller-and-onefile-how-to-include-an-image-in-the-exe-file
-def resource_path(relative_path):
-    # Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS2
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
+from emailBody import generate_email_body, image1_base64, image2_base64
 
 class one(tk.Frame):
 
-       
-        #Wait for the website to fully load
-        time.sleep(2)
-
-       
-
-        time.sleep(5)
-
-       
-        time.sleep(2)
-        # Click on the image button to navigate to another page
-        # The button image name is 'Day End Maintenance'
-        dayEndM_image = driver.find_element(By.XPATH,"//img[@src='/btxadmin/images/demo/icons/i_dayEndM_off.jpg']")
-        dayEndM_image.click()
-
-        # In here, after navigating to the new page, get the new url again
-        # In this page, it should be let user to choose the 'Day End Enquiry'
-
-        time.sleep(4)
-        second_url = driver.current_url
-        print("Second URL:", second_url)
-
-        # Define Day End Enquiry XPaths
-        day_end_enquiry_xpaths = [
-            "//img[@src='/btxadmin/images/demo/icons/i_dayEndE_on.jpg']",
-            "//img[@src='/btxadmin/images/demo/icons/i_dayEndE_off.jpg']"
-        ]
-
-        # Iterate through each XPath
-        for xpath in day_end_enquiry_xpaths:
-            try:
-                # Try to find the element
-                dayEndEnquiry_image = driver.find_element(By.XPATH,xpath)
-                # If found, click on it
-                dayEndEnquiry_image.click()
-                # Exit loop if element is found and clicked
-                break 
-            except NoSuchElementException:
-                # If element is not found, continue to the next XPath
-                continue
-
-        # In this page, it should be let user to choose the 'Day End Qnquiry' and 'Process Date'
-        third_url = driver.current_url
-        print("Third URL:", third_url)
-
-
-        time.sleep(3)
-        # Selecting the multi-select element by locating its id
-        select = Select(driver.find_element(By.ID,"ctl00_cntPlcHldrContent_selEODEnquiry"))
-
-        # Wait for navigation to complete and the dropdown to be visible
-    
-        # Select an option from the dropdown (change index as needed)
-        select.select_by_value("1,S")
-
-        # Locate the datepicker input element
-        datepicker_input = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "ctl00_cntPlcHldrContent_txtDate")))
-        # Get yesterday's date
-        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
-        yesterday_str = yesterday.strftime('%d/%m/%Y')  
-
-        # Enter yesterday's date into the input field
-        datepicker_input.clear()  # Clear any existing value
-        datepicker_input.send_keys(yesterday_str)
-
-        time.sleep(3)
-
-        searchButton = driver.find_element(By.ID, "ctl00_cntPlcHldrContent_btnTpltUpdate_btnSearch")
-        searchButton.click()
-
-        forth_url = driver.current_url
-        print("Forth URL:", forth_url)
-
-        # Switch to the new window
-        new_window = driver.window_handles[1]
-        driver.switch_to.window(new_window)
-
-        # Maximize the window
-        driver.maximize_window()
-
-        fifth_url = driver.current_url
-        print("Fifth URL:", fifth_url)
-
-        process_dates = driver.find_elements(By.XPATH, "//table[@class='clsTable']/tbody/tr[2]/td[@id='tdBG']/span")
-
-        for process in process_dates:
-            print(process.text)
-
-        driver.get(fifth_url)
-
-        # Get the HTML content of the fifth URL
-        html_content_fifth_url = driver.page_source
-
-        # Print the HTML content of the fifth URL
-        # print("HTML Content of Fifth URL:", html_content_fifth_url)
-
+    def process_html_content(html_content):
         # Parse the HTML
-        soup = BeautifulSoup(html_content_fifth_url, "html.parser")
+        soup = BeautifulSoup(html_content, "html.parser")
 
         # Find the first table
         table1 = soup.find("table")
@@ -265,38 +160,11 @@ class one(tk.Frame):
 
         html_table = str(soup)
         # print(html_table)
-        # Close the workbook
 
-        # tasks = driver.find_elements(By.XPATH,"//table[@id='gvEodEnqSumm']/tbody/tr/td[1]")
-        # # tasks = driver.find_elements(By.XPATH,"//table[@id='gvEodEnqSumm']/tbody/tr")
-
-        # for task in tasks:
-        #     print(task.text)
-        # Concatenate process date with HTML table
-
-        def get_base64_encoded_image(image_path):
-            with open(image_path, "rb") as img_file:
-                return base64.b64encode(img_file.read()).decode('utf-8')
-
-        
-        body = '''
-            <p style="color: #a6a698; font-size:13px; font-family: Arial, sans-serif;">Regards,</p>
-            <br>
-            <p style="color: black; font-size: 14px; font-family: Calibri, sans-serif; font-weight: bold; margin: 0; padding:0;margin-bottom: 3px">IT OPERATIONS</p>
-            <p style="color: #a6a698; font-size:13px; font-family: Arial, sans-serif; margin: 0; padding:0;margin-bottom: 3px">Group Digital, Technology & Transformation</p>
-            <p style="color: #a6a698; font-size: 13px; font-family: Arial, sans-serif; font-weight: bold; margin: 0; padding:0;margin-bottom: 3px">Kenanga Investment Bank Berhad</p>
-            <p style="color: #a6a698; font-size: 12px; font-family: Arial, sans-serif; margin: 0; padding:0;margin-bottom: 3px">Level 6, Kenanga Tower</p>
-            <p style="color: #a6a698; font-size: 12px; font-family: Arial, sans-serif;margin: 0; padding:0;margin-bottom: 4px">237, Jalan Tun Razak, 50400 Kuala Lumpur</p>
-            <p style="color: #4472c4; font-size: 11px; font-family: Arial, sans-serif;margin: 0; padding:0;margin-bottom: 3px">Tel: GL +60 3 21722888 (Ext:8364 / 8365 / 8366 / 8357) </p>
-            <br>
-            <img src="data:image/png;base64, {}" alt="image1"> <!-- Embed image1 -->
-            <br>
-            <img src="data:image/png;base64, {}" alt="image2" > <!-- Embed image2 -->
-                '''.format(get_base64_encoded_image(resource_path('images/image1.png')), get_base64_encoded_image(resource_path('images/image2.png')))
-
-
-        # html_content = f"<p>Process Date: {process_date_value}</p>\n" + html_table + body
+        body = generate_email_body(image1_base64,image2_base64)
+  
         html_content = f"<p>Process Date: {process_date_value}</p>\n\n{html_table}\n{body}"
+
         # Set up the email details
         sender_email = "dannywong@kenanga.com.my"
         receiver_email = ["dannywong@kenanga.com.my"]
@@ -318,4 +186,4 @@ class one(tk.Frame):
             print("Email successfully sent!")
 
         time.sleep(10)
-        driver.quit()
+        # driver.quit()

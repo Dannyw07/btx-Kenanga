@@ -1,4 +1,5 @@
 from libraries import *
+import one
 
 class BTX:
     
@@ -147,14 +148,22 @@ class BTX:
                 # Step 4: Switch to new window and perform actions
                 new_window = driver.window_handles[1]
                 driver.switch_to.window(new_window)
+                
+                # The new window get maximize
                 driver.maximize_window()
+
                 fifth_url = driver.current_url
                 print("Fifth URL:", fifth_url)
+
                 process_dates = driver.find_elements(By.XPATH, "//table[@class='clsTable']/tbody/tr[2]/td[@id='tdBG']/span")
                 for process in process_dates:
                     print(process.text)
-                driver.get(fifth_url)
+
+                # driver.get(fifth_url)
                 html_content_fifth_url = driver.page_source
+
+                # Call the function in one.py and pass html_content_fifth_url
+                one.process_html_content(html_content_fifth_url)
             finally:
                 driver.quit()
             
