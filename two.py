@@ -70,11 +70,9 @@ class two(tk.Frame):
     third_url = driver.current_url
     print("Third URL:", third_url)
 
-
     time.sleep(3)
     # Selecting the multi-select element by locating its id
     select = Select(driver.find_element(By.ID,"ctl00_cntPlcHldrContent_selEODEnquiry"))
-
 
     # Select an option from the dropdown (change index as needed)
     select.select_by_value("1,S")
@@ -84,10 +82,6 @@ class two(tk.Frame):
     # Get yesterday's date
     yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
     yesterday_str = yesterday.strftime('%d/%m/%Y')  
-
-    # Get today's date
-    # today = datetime.datetime.now()
-    # today_str = today.strftime('%d/%m/%Y')
 
     # Enter yesterday's date into the input field
     datepicker_input.clear()  # Clear any existing value

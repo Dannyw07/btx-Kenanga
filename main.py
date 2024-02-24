@@ -1,20 +1,26 @@
-import tkinter as tk
-from tkinter import ttk
-from threading import Thread
-import ttkbootstrap as tb
-import time
-import requests
-from threading import Thread
-import requests
-import ttkbootstrap as tb
-from tkinter import messagebox
-import datetime
-import subprocess
-# from dotenv import load_dotenv
-# load_dotenv()
-
+from libraries import *
 
 class BTX:
+    
+    def login(driver):
+        # Make selenium to automate the login process (username,password,login button)
+        username_input = driver.find_element(By.ID, 'ctl00_cntPlcHldrContent_txtUsrID')
+        password_input = driver.find_element(By.ID, 'ctl00_cntPlcHldrContent_txtUsrPwd')
+        submit_button = driver.find_element(By.ID,'ctl00_cntPlcHldrContent_ibSignIn')
+
+        username_input.send_keys('ITHQOPR')
+        password_input.send_keys('Kibb8888')
+        submit_button.click()
+
+    # Define a function for navigating to a specific page
+    def navigate_to_page(driver, url, xpath):
+        driver.get(url)
+        time.sleep(2)
+        driver.maximize_window()
+        time.sleep(2)
+        element = driver.find_element(By.XPATH, xpath)
+        element.click()
+        time.sleep(2)
 
     def update_message(self, message):
         # Update the message label text
@@ -94,57 +100,66 @@ class BTX:
 
         # Keep running until the user presses the Stop button or the program stops
         while self.running:
+            driver = webdriver.Chrome()
             current_time = datetime.datetime.now().time()
+            try:
+                # Login to BTX website page
+                login(driver)
 
-            # Check if it's 4:30 AM
-            if current_time.hour == 10 and current_time.minute == 30:
-                # Check if email has already been sent
-                if not email_sent_430am:
-                    subprocess.run(["python", "one.py"])
-                    messagebox.showinfo("Processing Ended", "Processing for 10:30 AM has ended.")
-                    # Set email_sent flag to True to prevent sending multiple emails
-                    email_sent_430am = True
-            else:
-                # Reset email_sent_430am if the time is not 4:30 AM
-                email_sent_430am = False
-            
-            # Check if it's 5:45 AM
-            if current_time.hour == 11 and current_time.minute == 10:
-                # Check if email for 5:45 AM has already been sent
-                if not email_sent_545am:
-                    subprocess.run(["python", "two.py"])
-                    messagebox.showinfo("Processing Ended", "Processing for 11:10 AM has ended.")
-                    email_sent_545am = True
-            else:
-                # Reset email_sent_545am if the time is not 5:45 AM
-                email_sent_545am = False
+                # Step 2: Navigate to page
+                navigate_to_page(driver, 'https://btx.kenanga.com.my/btxadmin/default.aspx', "//img[@src='/btxadmin/images/demo/icons/i_dayEndM_off.jpg']")
+                
+                # Check if it's 4:30 AM
+                if current_time.hour == 10 and current_time.minute == 30:
+                    # Check if email has already been sent
+                    if not email_sent_430am:
+                        subprocess.run(["python", "one.py"])
+                        messagebox.showinfo("Processing Ended", "Processing for 10:30 AM has ended.")
+                        # Set email_sent flag to True to prevent sending multiple emails
+                        email_sent_430am = True
+                else:
+                    # Reset email_sent_430am if the time is not 4:30 AM
+                    email_sent_430am = False
+                
+                # Check if it's 5:45 AM
+                if current_time.hour == 11 and current_time.minute == 10:
+                    # Check if email for 5:45 AM has already been sent
+                    if not email_sent_545am:
+                        subprocess.run(["python", "two.py"])
+                        messagebox.showinfo("Processing Ended", "Processing for 11:10 AM has ended.")
+                        email_sent_545am = True
+                else:
+                    # Reset email_sent_545am if the time is not 5:45 AM
+                    email_sent_545am = False
 
-            # Check if it's 6:30 AM
-            if current_time.hour == 12 and current_time.minute == 10:
-                # Check if email for 6:30 AM has already been sent
-                if not email_sent_630am:
-                    subprocess.run(["python", "three.py"])
-                    messagebox.showinfo("Processing Ended", "Processing for 12:10 PM has ended.")
-                    email_sent_630am = True
-            else:
-                # Reset email_sent_545am if the time is not 5:45 AM
-                email_sent_630am = False
+                # Check if it's 6:30 AM
+                if current_time.hour == 12 and current_time.minute == 10:
+                    # Check if email for 6:30 AM has already been sent
+                    if not email_sent_630am:
+                        subprocess.run(["python", "three.py"])
+                        messagebox.showinfo("Processing Ended", "Processing for 12:10 PM has ended.")
+                        email_sent_630am = True
+                else:
+                    # Reset email_sent_545am if the time is not 5:45 AM
+                    email_sent_630am = False
 
-            # Check if it's 7:00 AM
-            if current_time.hour == 13 and current_time.minute == 1:
-                # Check if email for 7:00 AM has already been sent
-                if not email_sent_700am:
-                    subprocess.run(["python", "four.py"])
-                    messagebox.showinfo("Processing Ended", "Processing for 1:01 PM has ended.")
-                    email_sent_700am = True
-            else:
-                # Reset email_sent_700am if the time is not 7:00 AM
-                email_sent_700am = False
+                # Check if it's 7:00 AM
+                if current_time.hour == 13 and current_time.minute == 1:
+                    # Check if email for 7:00 AM has already been sent
+                    if not email_sent_700am:
+                        subprocess.run(["python", "four.py"])
+                        messagebox.showinfo("Processing Ended", "Processing for 1:01 PM has ended.")
+                        email_sent_700am = True
+                else:
+                    # Reset email_sent_700am if the time is not 7:00 AM
+                    email_sent_700am = False
 
-            print('waiting...')
-            self.update_message('Waiting...')
-            # If neither of the conditions are met, wait for 5 seconds
-            time.sleep(5)
+                print('waiting...')
+                self.update_message('Waiting...')
+                # If neither of the conditions are met, wait for 5 seconds
+                time.sleep(5)
+            finally:
+                driver.quit()
             
         # Enable the Start button after stopping
         self.startBtn["state"] = tk.NORMAL

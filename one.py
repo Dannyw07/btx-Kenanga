@@ -13,27 +13,15 @@ def resource_path(relative_path):
 
 class one(tk.Frame):
 
-        driver = webdriver.Chrome()
-        #Initial URL
-        driver.get('https://btx.kenanga.com.my/btxadmin/default.aspx')
-
-        # Maximizing window
-        driver.maximize_window()
-
+       
         #Wait for the website to fully load
         time.sleep(2)
 
-        # Make selenium to automate the login process (username,password,login button)
-        username_input = driver.find_element(By.ID, 'ctl00_cntPlcHldrContent_txtUsrID')
-        password_input = driver.find_element(By.ID, 'ctl00_cntPlcHldrContent_txtUsrPwd')
-        submit_button = driver.find_element(By.ID,'ctl00_cntPlcHldrContent_ibSignIn')
+       
 
         time.sleep(5)
 
-        username_input.send_keys('ITHQOPR')
-        password_input.send_keys('Kibb8888')
-        submit_button.click()
-
+       
         time.sleep(2)
         # Click on the image button to navigate to another page
         # The button image name is 'Day End Maintenance'
@@ -76,10 +64,7 @@ class one(tk.Frame):
         select = Select(driver.find_element(By.ID,"ctl00_cntPlcHldrContent_selEODEnquiry"))
 
         # Wait for navigation to complete and the dropdown to be visible
-        # WebDriverWait(driver, 20).until(EC.url_changes(driver.current_url))
-        # select_element = WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.ID, "ctl00_cntPlcHldrContent_selEODEnquiry")))
-
-
+    
         # Select an option from the dropdown (change index as needed)
         select.select_by_value("1,S")
 
@@ -88,10 +73,6 @@ class one(tk.Frame):
         # Get yesterday's date
         yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
         yesterday_str = yesterday.strftime('%d/%m/%Y')  
-
-        # Get today's date
-        # today = datetime.datetime.now()
-        # today_str = today.strftime('%d/%m/%Y')
 
         # Enter yesterday's date into the input field
         datepicker_input.clear()  # Clear any existing value
@@ -143,7 +124,6 @@ class one(tk.Frame):
         # Print the extracted data
         print(process_date_label + ":", process_date_value)
        
-
         # Extract data from the first table
         data1 = []
         for row in table1.find_all("td", id="tdBG"):
