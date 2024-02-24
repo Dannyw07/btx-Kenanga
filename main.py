@@ -148,91 +148,7 @@ class BTX:
             
         # Enable the Start button after stopping
         self.startBtn["state"] = tk.NORMAL
-
-    # def setup_gui(self):
-    #     frame4 = tk.Frame(self.master, borderwidth=2,)
-    #     frame4.pack(side="top", padx=10, pady=30)
-
-    #     # Create a label for displaying messages
-    #     self.outputMsg = tk.Label(frame4, text="")
-    #     self.outputMsg.pack(padx=10)
-
-    #     frame5 = tk.Frame(self.master, borderwidth=2)
-    #     frame5.pack(side="top", padx=30, )
-
-    #     my_style = tb.Style()
-    #     my_style.configure('success.TButton', font=("Helvetica", 18))
-    #     my_style.configure('danger.TButton', font=("Helvetica", 18))
-  
-    #     # Create widgets for Tab 1 content
-    #     self.startBtn = tb.Button(frame5, text="Start", 
-    #         command=self.start_program,
-    #         bootstyle="success",
-    #         style= "success.Tbutton",
-    #         width=10,
-    #         )
-    #     self.startBtn.pack(pady=40)
-
-    #     self.endBtn = tb.Button(frame5, text="End", 
-    #         command=self.stop_program,
-    #         bootstyle="danger",
-    #         style= "danger.Tbutton",
-    #         width=10
-    #         )
-    #     self.endBtn.pack(pady=0)
-
-    #     frame6 = tk.Frame(self.master, borderwidth=2,)
-    #     frame6.pack(side="top", padx=10, pady=30)
-    #     # Create a label to display image
-    #     self.displayMsg = tk.Label(frame6, text="")
-    #     self.displayMsg.pack(padx=10)
-        
-    # def setup_gui(self):
-    #     frame4 = tk.Frame(self.master, borderwidth=2)
-    #     frame4.pack(side="top", padx=10, pady=30)
-    #     self.outputMsg = tk.Label(frame4, text="")
-    #     self.outputMsg.pack(padx=10)
-
-    #     frame5 = tk.Frame(self.master, borderwidth=2)
-    #     frame5.pack(side="top", padx=30)
-    #     my_style = tb.Style()
-    #     my_style.configure('success.TButton', font=("Helvetica", 18))
-    #     my_style.configure('danger.TButton', font=("Helvetica", 18))
-
-    #     self.startBtn = tb.Button(frame5, text="Start", 
-    #         command=self.start_program,
-    #         bootstyle="success",
-    #         style="success.Tbutton",
-    #         width=10)
-    #     self.startBtn.pack(pady=40)
-
-        
-    #     frame6 = tk.Frame(self.master, borderwidth=2)
-    #     frame6.pack(side="top", padx=10, pady=30)
-    #     self.displayMsg = tk.Label(frame6, text="")
-    #     self.displayMsg.pack(padx=10)
-
-    #     self.endBtn = tb.Button(frame5, text="End", 
-    #         command=self.stop_program,
-    #         bootstyle="danger",
-    #         style="danger.Tbutton",
-    #         width=10)
-    #     self.endBtn.pack(pady=0)
-
-
-    #     self.footer_label = tk.Label(self.master, text="Danny Wong Jia Hong © 2024  ", bd=1, anchor=tk.W)
-    #     self.footer_label.pack(side=tk.BOTTOM, fill=tk.X)
-
-    #     self.width_limit = 350
-    #     self.height_limit = 400
-    #     self.master.geometry(f"{self.width_limit}x{self.height_limit}")
-
-    #     self.tabControl = tb.Notebook(self.master)
-    #     self.tabControl.pack(expand=True, fill='both')
-
-    #     self.tab1 = tb.Frame(self.tabControl)
-    #     self.tabControl.add(self.tab1, text='Main')
-        
+ 
     def setup_gui(self):
         # Create a notebook (tabbed interface)
         self.tabControl = tb.Notebook(self.master)
@@ -279,29 +195,12 @@ class BTX:
         self.master.geometry(f"{self.width_limit}x{self.height_limit}")
 
 
-
     def __init__(self, master):
         self.master = master
         self.master.title("BTX Email Monitoring")
         self.setup_gui()
-    
-  
-        # Create a notebook (tabbed interface)
-        # self.notebook = tb.Notebook(master, bootstyle="info")
-
-        # Bind an event to check and prevent resizing
         self.master.bind("<Configure>", self.check_resize)
-       
-        # Create an instance of Tab1Content and pass width_limit and height_limit
-       
-        # Create instances of Tab1Content and Config classes
-        # self.tabOne = one(self.notebook)
-        # self.notebook.add(self.tabOne, text="Main")
-       
-
-       
-        # Place the notebook in the window
-        # self.notebook.pack(expand=True, fill="both", padx=10, pady=10)
+ 
 
     def check_resize(self, event):
         current_width = self.master.winfo_width()
