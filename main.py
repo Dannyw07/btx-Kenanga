@@ -162,8 +162,22 @@ class BTX:
                 # driver.get(fifth_url)
                 html_content_fifth_url = driver.page_source
 
-                # Call the function in one.py and pass html_content_fifth_url
-                one.process_html_content(html_content_fifth_url)
+                # # Call the function in one.py and pass html_content_fifth_url
+                # one.process_html_content(html_content_fifth_url)
+
+                # Check if it's 4:30 AM
+                if current_time.hour == 10 and current_time.minute == 30:
+                    # Check if email has already been sent
+                    if not email_sent_430am:
+                        # Call the function in one.py and pass html_content_fifth_url
+                        one.process_html_content(html_content_fifth_url)
+                        subprocess.run(["python", "one.py"])
+                        messagebox.showinfo(f"Processing Ended", "Processing for {current_time.hour} : {current_time.minute} AM has ended.")
+                        # Set email_sent flag to True to prevent sending multiple emails
+                        email_sent_430am = True
+                else:
+                    # Reset email_sent_430am if the time is not 4:30 AM
+                    email_sent_430am = False
             finally:
                 driver.quit()
             

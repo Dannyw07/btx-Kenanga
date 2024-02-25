@@ -109,5 +109,5 @@ class one(tk.Frame):
             server.sendmail(sender_email, receiver_email, message.as_string())
             print("Email successfully sent!")
 
-        # time.sleep(10)
+        time.sleep(4)
         # driver.quit()
